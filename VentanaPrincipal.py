@@ -8,10 +8,11 @@ Created on Tue Aug 22 19:43:37 2023
 #toolbar.actionTriggered.connect(self.imprimir_texto)
 
 
+
 from PyQt5.QtWidgets import QMainWindow, QApplication, QAction, QToolBar, QMessageBox,QDockWidget, QTextEdit, QWidget, QGraphicsDropShadowEffect
-from PyQt5.QtWidgets import QFrame, QLabel, QHBoxLayout, QFormLayout, QLineEdit, QSlider, QVBoxLayout, QScrollBar,QListView
+from PyQt5.QtWidgets import QFrame, QLabel, QHBoxLayout, QFormLayout, QLineEdit, QSlider, QVBoxLayout, QScrollBar, QListView, QPushButton, QVBoxLayout
 from PyQt5.QtGui import QIcon, QFont, QColor
-from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtCore import QSize, Qt, QEvent, QObject
 import login1
 import sys
 
@@ -23,10 +24,12 @@ class Usuarios(QMainWindow):
         self.setCentralWidget(self.Registro_Usuario)
         self.lned = QLineEdit(self)
         
+#class EventFilter(QObject):
+    
         
         
-
-
+        
+    
 
 class WindowPrincipal(QMainWindow):
     def __init__(self):
@@ -36,19 +39,24 @@ class WindowPrincipal(QMainWindow):
         
        
         
+       
+        
         self.frame_central = QFrame(self)
         self.frame_central.setLineWidth(2)
-        self.frame_central.setFrameStyle(QFrame.Panel | QFrame.Sunken)
+        #self.frame_central.setFrameStyle(QFrame.Panel | QFrame.Sunken)
         self.setCentralWidget(self.frame_central)
         
         self.frame_facturacion = QFrame(self.frame_central)
         self.frame_facturacion.setFrameShape(QFrame.StyledPanel)
-        self.frame_facturacion.setLineWidth(3)
+        #self.frame_facturacion.setLineWidth(3)
         
         self.frame_menu = QFrame(self.frame_central)
         self.frame_menu.setFrameShape(QFrame.StyledPanel)
         self.frame_menu.setLineWidth(3)
         
+        self.frame_superio_menu = QFrame(self)
+        self.frame_superio_menu.setFrameShape(QFrame.StyledPanel)
+
         self.listado_de_precios()
         
     def listado_de_precios(self):
@@ -60,26 +68,44 @@ class WindowPrincipal(QMainWindow):
         self.lyt_lista_precio.setSpacing(0)
         self.lyt_lista_precio.addWidget(self.lista_de_vista)
         self.lyt_lista_precio.addWidget(self.slider_lista_precio)
-       
         
-       
+        
+        self.efecto_sombra = QGraphicsDropShadowEffect()
+        self.efecto_sombra.setColor(QColor(174, 214, 241 ))
+        self.efecto_sombra.setOffset(3,3) #Establecer el desplazamiento de la sombra a 5 píxeles en horizontal y vertical
+        self.efecto_sombra.setBlurRadius(10)
+        
+        self.PushButton()
+        
+    def PushButton(self):
+        self.button_menu = QPushButton(self)
+        self.button_menu.setIcon(QIcon("imagenes 1/menu.png"))
+        self.button_menu.setIconSize(QSize(40,40))
+        self.button_menu.setStyleSheet("QPushButton{border-radius: 0px;}")
+        self.button_menu.installEventFilter(self)
+    
+
+        
         #corregir y nombrar    
         self.lne = QLineEdit(self)
         self.lne.setFixedSize(350,30)
         self.lne.setFont(QFont("Arial",12))
         self.lne.setStyleSheet("QLineEdit{border-radius: 10px;}")
         self.lne.addAction(QIcon("imagenes 1/lupa1.png"),QLineEdit.LeadingPosition)
-        self.efecto_sombra = QGraphicsDropShadowEffect()
+        self.lne.setGraphicsEffect(self.efecto_sombra)
         self.efecto_sombra.setColor(QColor(174, 214, 241 ))
         self.efecto_sombra.setOffset(3,3) #Establecer el desplazamiento de la sombra a 5 píxeles en horizontal y vertical
         self.efecto_sombra.setBlurRadius(10)
-        self.lne.setGraphicsEffect(self.efecto_sombra)
-        
+        self.efecto_sombra = QGraphicsDropShadowEffect()
         
         self.lyt = QHBoxLayout()
+        self.lyt.addWidget(self.button_menu)
         self.lyt.addStretch()
         self.lyt.addWidget(self.lne)
         self.lyt.addStretch()
+
+    
+        
         
         
         
@@ -106,10 +132,14 @@ class WindowPrincipal(QMainWindow):
         
         self.frame_central.setLayout(self.qhly)
         
+    def eventFilter(self, obj, event):
+        if event.type() == QEvent.Enter:
+            self.button_menu.setIconSize(QSize(45,45))
+        if event.type() == QEvent.Leave:
+            self.button_menu.setIconSize(QSize(40,40))
+        return False
         
-        
-        
-        
+    
         
         #qfly = QFormLayout(self)
         #qfly.addRow(frame)
@@ -145,7 +175,8 @@ class WindowPrincipal(QMainWindow):
     def lista_Usuario(self):
         self.lista = Usuarios()
         self.lista.show()
-
+        
+    
 
         
 
