@@ -5,7 +5,8 @@ Created on Sat Jul 22 12:21:13 2023
 @author: Acer Tuch Screen
 """
 
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QLineEdit, QCheckBox, QMessageBox, QFormLayout, QHBoxLayout
+from PyQt5.QtWidgets import QApplication, QMainWindow, QFrame, QLabel, QPushButton, QLineEdit, QCheckBox, QMessageBox, QFormLayout, QHBoxLayout, QVBoxLayout, QGroupBox
+from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QPixmap, QFont, QIcon
 from NuevoRegistro import RegistroUsuario
 import VentanaPrincipal as vp
@@ -13,154 +14,113 @@ from PyQt5.QtCore import Qt
 import sys
 
 
-class login(QWidget):
+class login(QMainWindow):
     def __init__(self):
         super(login,self).__init__()
-        self.iniciar()
-       
+        self.resize(550,600)
         
-    def iniciar(self):
-        self.setFixedSize(400,500)
-        self.setWindowTitle("Login")
+        Frame_Central = QFrame(self)
+        self.setCentralWidget(Frame_Central)
         
-        self.logo()
-    
-    def logo(self):
-        imagen = 'imagenes 1/usuario.png'
+        image_url = "imagen/acceso.png" # directorio de la imagen
         
         try:
-            with open(imagen):
-                self.etiquetaimagen = QLabel(self)
-                self.pixmap = QPixmap(imagen)
-                self.etiquetaimagen.setPixmap(self.pixmap)
-                self.etiquetaimagen.move(168,50)
-                self.etiquetaimagen.setAlignment(Qt.AlignCenter)
-        except FileNotFoundError:
-            print('no se encuentra imagen')
+            with open(image_url):
+                label_image = QLabel(self)
+                pixmap = QPixmap(image_url)
+                pixmap.scaled(75,100)
+                label_image.setPixmap(pixmap)
+                label_image.resize(75,100)
+                label_image.setAlignment(Qt.AlignCenter)
+        except:
+            print("imagen no encotrada ")
             
-        self.label()
+        label_Login = QLabel("Login",self)
+        label_Login.setStyleSheet("color: rgb(255,255,255);")
+        label_Login.setAlignment(Qt.AlignCenter)
+        label_Login.setFont(QFont("Times New Roman",25))
         
-      
-    def label(self):
-        self.usuario = QLabel('Usuario',self)
-        self.usuario.move(15,160)
-        self.usuario.setFont(QFont("Ariel",12))
-        
-        self.Password = QLabel("Password",self)
-        self.Password.move(15,210)
-        self.Password.setFont(QFont("Ariel",12))
-       
-        self.LineEditLogin()
-            
-    def LineEditLogin(self):
         self.LineUsuario = QLineEdit(self)
-        self.LineUsuario.setFixedSize(200,30)
-        self.LineUsuario.setFont(QFont("Arial",14))
+        self.LineUsuario.setFixedSize(400,40)
+        self.LineUsuario.setStyleSheet("border-radius: 20px;")
+        self.LineUsuario.addAction(QIcon("imagen/usuario1.png"),QLineEdit.LeadingPosition)
+        self.LineUsuario.setPlaceholderText("Nombre Usuario")
+        
+        self.LineUsuario.setFont(QFont("Times New Roman",14))
         
         self.LinePassWord = QLineEdit(self)
-        self.LinePassWord.setFixedSize(200,30)
-        self.LinePassWord.setFont(QFont("Arial",14))
+        self.LinePassWord.setFixedSize(400,40)
+        self.LinePassWord.setStyleSheet("QLineEdit{border-radius: 20px;}")
+        self.LinePassWord.addAction(QIcon("imagen/cerrar-con-llave.png"),QLineEdit.LeadingPosition)
+        self.LinePassWord.setPlaceholderText("Password")
         self.LinePassWord.setEchoMode(QLineEdit.Password)
-      
-        self.PushButtonLogin()
+        self.LinePassWord.setFont(QFont("Times New Roman",14))
         
-    def PushButtonLogin(self):
-        self.BotonLogin = QPushButton(self)
-        self.BotonLogin.setIcon(QIcon("imagenes 1/icono sesion.png"))
-        self.BotonLogin.setFixedSize(120,40)
-        self.BotonLogin.clicked.connect(self.ReadBd)
+        self.button_login = QPushButton("Login",self)
+        self.button_login.setIcon(QIcon("imagen/iniciar-sesion.png"))
+        self.button_login.setIconSize(QSize(80,30))
         
-            
-            
-        self.PushButtonRegistrar()
-           
-    def PushButtonRegistrar(self):
-        self.CrearUsuario = QPushButton("Registrar",self)
-        self.CrearUsuario.setFixedSize(120,40)
-        self.CrearUsuario.clicked.connect(self.PaginaDeRegistro)
-           
-        self.mostrarPassword = QCheckBox("show",self)
-        self.mostrarPassword.move(260,245)
-        self.mostrarPassword.setChecked(False)
-        self.mostrarPassword.stateChanged.connect(self.showPassword)
+        self.button_registrar = QPushButton("Registrar",self)
+        self.button_registrar.setIcon(QIcon("imagen/agregar-usuario.png"))
+        self.button_registrar.setIconSize(QSize(60,30))
         
-        
-        
-       
-        self.qvly= QHBoxLayout()
-        self.qvly.setContentsMargins(230,0,0,0)
-        self.qvly.addWidget(self.mostrarPassword)
-        
-        self.qhly_botones = QHBoxLayout()
-        self.qhly_botones.addStretch()
-        self.qhly_botones.addWidget(self.BotonLogin)
-        self.qhly_botones.addWidget(self.CrearUsuario)
-        self.qhly_botones.addStretch()
-        self.qhly_botones.insertSpacing(2,10)
-      
-        
-        
-        self.flyt = QFormLayout(self)
-        
-        self.flyt.addRow(self.etiquetaimagen)
-        self.flyt.addRow(self.usuario,self.LineUsuario)
-        self.flyt.addRow(self.Password,self.LinePassWord)
-        self.flyt.addRow(self.qvly)
-        self.flyt.addRow(self.qhly_botones)
-        
-        self.flyt.setContentsMargins(30,10,30,10)
-        self.flyt.setVerticalSpacing(30)
-        
-       
-        
-        
-        
-    def showPassword(self):
-        if self.mostrarPassword.isChecked():
-            self.LinePassWord.setEchoMode(False) 
-        else:
-            self.LinePassWord.setEchoMode(QLineEdit.Password)
+        self.button_gmail = QPushButton(self)
+        self.button_gmail.setIcon(QIcon("imagen/google.png"))
+        self.button_gmail.setIconSize(QSize(60,30))
     
+        vertical_Layout_logo = QVBoxLayout()
+        vertical_Layout_logo.addSpacing(50)
+        vertical_Layout_logo.addWidget(label_image)
+        vertical_Layout_logo.addSpacing(20)
+        vertical_Layout_logo.addWidget(label_Login)
        
-       
-    def ReadBd(self):
-        self.Read = 'basededatos.txt'
-        self.usuario = {}
-        self.nombre = self.nombreUsuario
-     
-        try:
-            with open(self.Read) as f:
-                for datos in f:
-                    datos_usuarios = datos.split(" ")
-                    self.nombreUsuario =datos_usuarios[0]
-                    password = datos_usuarios[1].rstrip("\n")
-                    self.usuario[self.nombreUsuario]=password
-        except FileNotFoundError:
-            f = ("basededatos.txt", "W")
+        layout_Line_usuario = QHBoxLayout()
+        layout_Line_usuario.addStretch()
+        layout_Line_usuario.addWidget(self.LineUsuario)
+        layout_Line_usuario.addStretch()
         
-        self.nombreUsuario =  self.LineUsuario.text()
-        password = self.LinePassWord .text()
-        if (self.nombreUsuario, password) in self.usuario.items():
-            self.close()
-            self.window = vp.WindowPrincipal()
-            self.window.showMaximized()
-    
-        else:
-            QMessageBox.information(self,"Error", "El usuario no existe", QMessageBox.Close)
-            
-            
+        layout_Line_password = QHBoxLayout()
+        layout_Line_password.addStretch()
+        layout_Line_password.addWidget(self.LinePassWord)
+        layout_Line_password.addStretch()
+        
+        layout_button_login = QHBoxLayout()
+        layout_button_login.addStretch()
+        layout_button_login.addWidget(self.button_login)
+        layout_button_login.addStretch()
         
         
-    def PaginaDeRegistro(self):
-        self.Pagina = RegistroUsuario()
-        self.Pagina.show()
-        
-        
+        layout_button_registro = QHBoxLayout()
+        layout_button_registro.addStretch()
+        layout_button_registro.addWidget(self.button_registrar)
+        layout_button_registro.addWidget(self.button_gmail)
+        layout_button_registro.addStretch()
 
+        formLayout = QFormLayout()
+        formLayout.addRow(vertical_Layout_logo)
+        
+        formLayout.addRow(layout_Line_usuario)
+        formLayout.addRow(layout_Line_password)
+        formLayout.addRow(layout_button_login)
+        formLayout.addRow(layout_button_registro)
+        formLayout.setVerticalSpacing(50)
+       
+        
+        
+        
+        Frame_Central.setLayout(formLayout)
+        
+   
+        
+        
+        
+           
+        
+        
 if __name__=='__main__':
     App = QApplication(sys.argv)
     perfil = login()
-    perfil.setStyleSheet("background-color: rgb(255, 249, 196 );")
+    perfil.setStyleSheet("QMainWindow{background-image: url(fondo 2.jpg);}")
     perfil.show()
     sys.exit(App.exec_())
         
