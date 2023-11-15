@@ -1,25 +1,24 @@
-from PyQt5.QtWidgets import QMainWindow, QApplication, QFrame, QHBoxLayout, QVBoxLayout, QMessageBox, QWidget, QFormLayout
-from PyQt5.QtWidgets import QLineEdit, QToolBar,QListWidget, QPushButton,QAction,QScrollBar, QTextEdit, QLabel
+from PyQt5.QtWidgets import QMainWindow, QApplication, QFrame, QHBoxLayout, QVBoxLayout, QMessageBox, QWidget, QFormLayout, QTableWidget
+from PyQt5.QtWidgets import QLineEdit, QToolBar,QListWidget, QPushButton,QAction,QScrollBar, QTextEdit, QLabel, QSpinBox, QGroupBox, QHeaderView
 from PyQt5.QtGui import QIcon, QFont, QPixmap
 from PyQt5.QtCore import QSize, Qt, QEvent
 from Dashboard import dashboard
 from registro_de_usuario import RegistroUsuarios
 from Lista_de_productos import Productos
-from login1 import login
+import login1 as lg
 import sys
 
 class PassWord(QWidget):
     def __init(self):
         super(PassWord, self).__init__()
         
-        
-        
+                
 class Application(QMainWindow):
     def __init__(self):
         super(Application,self).__init__()
-        self.setMinimumSize(400,400)
         
-        
+        #self.setMaximumSize(500,600)
+                
         self.frame()
         
     def frame(self):
@@ -27,7 +26,7 @@ class Application(QMainWindow):
         self.frame_central.setStyleSheet("background-color: rgb(234, 242, 248 );")
         self.setCentralWidget(self.frame_central)
         
-        
+        #frame header *********************************************************************************************
         self.frame_header = QFrame(self.frame_central)
         self.frame_header.setFixedHeight(150)
         #self.frame_header.setFrameShape(QFrame.Panel)
@@ -46,48 +45,48 @@ class Application(QMainWindow):
         #self.frame_gastos.setFrameShape(QFrame.Panel)
         self.frame_gastos.setStyleSheet("background-color: rgb(255,255,255 );")
         #self.frame_gastos.setStyleSheet("border-radius: 15px;")
-
+        #***********************************************************************************************************
         
         self.frame_menu_central = QFrame(self)
         #self.frame_menu_central.setFrameShape(QFrame.Panel)
         #self.frame_menu_central.setStyleSheet("border-radius: 15px;")
-         
-        
-        self.frame3 = QFrame(self)
-        #self.frame3.setFrameShape(QFrame.Panel)
-        self.frame3.setFixedWidth(50)
-        self.frame3.setStyleSheet("border-radius: 15px;")
-
-        
        
-        self.frame4 = QFrame(self)
+        #********************************************************************************************************
+        self.frame_productos= QFrame(self)
+        self.frame_productos.setStyleSheet("background-color: rgb(255,255,255 );")
         
-        self.frame4.setStyleSheet("background-color: rgb(255,255,255 );")
-        #self.frame4.setFrameShape(QFrame.Panel)
         
-        self.frame5 = QFrame(self)
-        self.frame5.setStyleSheet("background-color: rgb(255,255,255 );")
-        #self.frame5.setFrameShape(QFrame.Panel)
+        self.barra_busqueda_productos = QFrame(self.frame_productos)
+        self.barra_busqueda_productos.setFixedHeight(70)
+        #self.barra_busqueda_productos.setFrameShape(QFrame.Panel)
+        self.frame_lista_productos = QFrame(self.frame_productos)
+        #self.frame_lista_productos.setFrameShape(QFrame.Panel)
         
-        self.frame_informacion_balance = QFrame(self.frame5)
+        layout_lineEdit = QVBoxLayout(self.frame_productos)
+        layout_lineEdit.setContentsMargins(0,0,0,0)
+        layout_lineEdit.addWidget(self.barra_busqueda_productos)
+        layout_lineEdit.addWidget(self.frame_lista_productos)
+
+        self.frame_productos.setLayout(layout_lineEdit)
+        #********************************************************************************************************
+          
+        self.frame_barra_de_herramienta_lateral = QFrame(self)
+        #self.frame_barra_de_herramienta_lateral.setFrameShape(QFrame.Panel)
+        self.frame_barra_de_herramienta_lateral.setFixedWidth(50)
+        self.frame_barra_de_herramienta_lateral.setStyleSheet("border-radius: 15px;")
+       
+        self.frame_detalle_venta = QFrame(self)
+        self.frame_detalle_venta.setStyleSheet("background-color: rgb(255,255,255 );")
+        #self.frame_detalle_venta.setFixedWidth(500)
+        
+        #self.frame_informacion_balance = QFrame(self.frame5)
         #self.frame_informacion_balance.setFrameShape(QFrame.Panel)
         
-        self.frame_menu_de_producto = QFrame(self.frame5)
+        #self.frame_menu_de_producto = QFrame(self.frame5)
         #self.frame_menu_de_producto.setFrameShape(QFrame.Panel)
-        
-        self.frame_lineEdit = QFrame(self)
-        #self.frame_lineEdit.setFrameShape(QFrame.Panel)
-        
-        self.frame_superio_derecho = QFrame(self)
-        
-        
+                
+        #self.frame_superio_derecho = QFrame(self)
 
-        
-        
-        
-        
-       
-        
         self.widgets()
             
     def widgets(self):
@@ -98,13 +97,34 @@ class Application(QMainWindow):
         label_balance.setFont(QFont("Times New Roman",20))
         label_balance.move(70,15)
         
+        cantidad_en_balance = 1000
+        balance = float(cantidad_en_balance)
+        
+        label_balance_cantidad = QLabel(f'$ {balance}',self.frame_disponible)
+        label_balance_cantidad.move(10,80)
+        label_balance_cantidad.setFont(QFont("Times New Roman",20))
+
         label_ventas = QLabel("Ventas",self.frame_venta)
         label_ventas.setFont(QFont("Times New Roman",20))
         label_ventas.move(65,15)
-
+        
+        cantidad_de_ventas = 1000
+        balance_en_ventas = float(cantidad_de_ventas)
+        
+        label_balance_ventas = QLabel(f'$ {balance_en_ventas}',self.frame_venta)
+        label_balance_ventas.move(10,80)
+        label_balance_ventas.setFont(QFont("Times New Roman",20))
+        
+        cantidad_gastos = 1000
+        balance_gastos = float(cantidad_gastos)
+        
         label_gastos = QLabel("Gastos",self.frame_gastos)
         label_gastos.setFont(QFont("Times New Roman",20))
         label_gastos.move(70,15)
+        
+        label_balance_gastos = QLabel(f'$ {balance_en_ventas}',self.frame_gastos)
+        label_balance_gastos.move(10,80)
+        label_balance_gastos.setFont(QFont("Times New Roman",20))
         
         imagen_balance = "imagen/monedas.png"
         imagen_ventas = "imagen/aumentar.png"
@@ -125,16 +145,89 @@ class Application(QMainWindow):
         boton_gastos.setIcon(QIcon(imagen_gasto))
         boton_gastos.move(5,2)
         boton_gastos.setIconSize(QSize(55,55))
-        boton_gastos.setStyleSheet("border: 0px")
-        
-        
+        boton_gastos.setStyleSheet("border: 0px")     
        
         # Widegets frame izquierdo********************************************************************************************
-        """
-        self.codigo_producto = QLineEdit(self)
-        self.nombre_producto = QLineEdit(self)
-        """
         
+        label_codigo = QLabel("Codigo",self)
+        label_codigo.setFont(QFont("Times New Roman",12))
+        label_nombre = QLabel("Nombre",self)
+        label_nombre.setFont(QFont("Times New Roman",12))
+        label_modelo = QLabel("modelo",self)
+        label_modelo.setFont(QFont("Times New Roman",12))
+        label_cantidad = QLabel("cantidad",self)
+        label_cantidad.setFont(QFont("Times New Roman",12))
+
+        
+        layout_label = QHBoxLayout(self)
+        layout_label.setSpacing(20)
+        layout_label.addWidget(label_codigo)
+        layout_label.addWidget(label_nombre)
+        layout_label.addWidget(label_modelo)
+        layout_label.addWidget(label_cantidad)
+        
+        lineedit_codigo = QLineEdit(self)
+        lineedit_codigo.setFixedSize(150,30)
+        lineedit_codigo.setPlaceholderText("00000")
+        
+        lineedit_nombre = QLineEdit(self)
+        lineedit_nombre.setFixedSize(150,30)
+        lineedit_nombre.setFixedHeight(30)
+        
+        lineedit_modelo = QLineEdit(self)
+        lineedit_modelo.setFixedSize(150,30)
+        lineedit_modelo.setFixedHeight(30)
+
+        spinbox_cantidad = QSpinBox(self)
+        spinbox_cantidad.setFixedSize(60,30)
+        
+        boton_agregar = QPushButton("agregar")
+           
+        lyout_barra_busqueda_productos = QHBoxLayout(self)
+        lyout_barra_busqueda_productos.addWidget(lineedit_codigo)
+        lyout_barra_busqueda_productos.addWidget(lineedit_nombre)
+        lyout_barra_busqueda_productos.addWidget(lineedit_modelo)
+        lyout_barra_busqueda_productos.addWidget(spinbox_cantidad)
+        lyout_barra_busqueda_productos.addWidget(boton_agregar)
+
+        formLayout_busqueda = QFormLayout(self.barra_busqueda_productos)
+        formLayout_busqueda.addRow(layout_label)
+        formLayout_busqueda.addRow(lyout_barra_busqueda_productos)
+        
+        textBrowser_productos = QTableWidget()
+        self.slider_lista_precio = QScrollBar(Qt.Vertical)
+        
+        layout_textBrowser_productos = QHBoxLayout(self.frame_lista_productos)
+        layout_textBrowser_productos.setContentsMargins(10,0,5,5)
+        layout_textBrowser_productos.addWidget(textBrowser_productos)
+        layout_textBrowser_productos.addWidget(self.slider_lista_precio)
+        
+        # frame derecho******************************************************************************************
+        
+        label_text_qgroupbox = "detalle de venta"
+        box_detalle_venta = QGroupBox(label_text_qgroupbox,self.frame_detalle_venta)
+        box_detalle_venta.setFont(QFont("Times New Roman",16))
+        lyout_detalle_venta = QHBoxLayout(self.frame_detalle_venta)
+        lyout_detalle_venta.addWidget(box_detalle_venta)
+        
+        table_detalle_venta =QTableWidget()
+        table_detalle_venta.setColumnCount(5)
+        table_detalle_venta.setHorizontalHeaderLabels(["Descripcion","Modelo","Cantidad","Precio","Total"])
+        lyout_tabla_detalle_venta = QHBoxLayout(self)
+        lyout_tabla_detalle_venta.addWidget(table_detalle_venta)
+        box_detalle_venta.setLayout(lyout_tabla_detalle_venta)
+        
+        """
+        label_factura = QLabel("factura",self.frame5)
+        label_factura.setFont(QFont("Times New Roman",18))
+        label_factura.setStyleSheet("color: rgb(231, 76, 60 );")
+        """
+        fecha_factura = QLineEdit()
+        numero_factura = QLineEdit("123456")
+        vendedor = QLineEdit()
+        RNC = QLineEdit()
+        pagar_factura = QPushButton()
+        limpiar_factura = QPushButton()
         # Widgets del header *************************************************************************************************
         """
         LineEdit = QLineEdit(self)
@@ -155,8 +248,7 @@ class Application(QMainWindow):
         layout_header_izquierdo.addWidget(boton_agregar_producto)
         layout_header_izquierdo.addWidget(LineEdit)
         layout_header_izquierdo.addWidget(frame_Fecha_Hora)
-        
-        
+                
         self.frame_lineEdit.setLayout(layout_header_izquierdo)
         """
         
@@ -169,6 +261,14 @@ class Application(QMainWindow):
         self.boton_salir.setIconSize(QSize(25,25))
         self.boton_salir.installEventFilter(self)
         self.boton_salir.clicked.connect(self.cerrar_seccion)
+        
+        self.boton_agregar_producto = QPushButton(self)
+        self.boton_agregar_producto.setToolTip("agregar producto")
+        self.boton_agregar_producto.setFixedHeight(50)
+        self.boton_agregar_producto.setIcon(QIcon("imagen/agregar.png"))  # color de icono #0D8CB5
+        self.boton_agregar_producto.setIconSize(QSize(25,25))
+        self.boton_agregar_producto.installEventFilter(self)
+        self.boton_agregar_producto.clicked.connect(self.agregar_producto)
         
         self.boton_usuarios = QPushButton(self)
         self.boton_usuarios.setToolTip("Usuarios")
@@ -199,9 +299,10 @@ class Application(QMainWindow):
         self.boton_calculadora.setIconSize(QSize(25,25))
         self.boton_calculadora.installEventFilter(self)
         
-        layout_boton_usuarios  = QVBoxLayout(self.frame3)
+        layout_boton_usuarios  = QVBoxLayout(self.frame_barra_de_herramienta_lateral)
         layout_boton_usuarios.setContentsMargins(0,10,0,0)
         layout_boton_usuarios.addWidget(self.boton_salir )
+        layout_boton_usuarios.addWidget(self.boton_agregar_producto)
         layout_boton_usuarios.addWidget(self.boton_usuarios)
         layout_boton_usuarios.addWidget(self.boton_de_Estadisticas)
         layout_boton_usuarios.addWidget(self.boton_calculadora)
@@ -210,34 +311,18 @@ class Application(QMainWindow):
         
      
         #*************************************************************************************************************
-        """
-        self.slider_lista_precio = QScrollBar(Qt.Vertical)
-    
-      
-        lista_de_productos = QListWidget(self.frame4)
-        lista_de_productos.setStyleSheet("background-color: rgb(255, 255, 255);")
-        diseno_lista = QHBoxLayout(self.frame4)
-        diseno_lista.addWidget(lista_de_productos)
-        diseno_lista.addWidget(self.slider_lista_precio)
-       """
-        """
-        textEdit = QTextEdit()
-        textEdit.setStyleSheet("background-color: rgb(255,255,255)")
-        layout_TextEdit = QHBoxLayout(self.frame5)
-        layout_TextEdit.addWidget(textEdit)
-      """
-     
+   
        
         self.layout_frame()
         
         
     def layout_frame(self):
-        
+        """
         layout_derecho_interno = QVBoxLayout(self.frame5)
         layout_derecho_interno.setContentsMargins(0,0,0,0)
         layout_derecho_interno.addWidget(self.frame_informacion_balance)
         layout_derecho_interno.addWidget(self.frame_menu_de_producto)
-        
+        """
         layout_balance = QHBoxLayout(self.frame_header)
         layout_balance.setContentsMargins(20,20,20,20)
         
@@ -265,9 +350,9 @@ class Application(QMainWindow):
 
         layout2 = QHBoxLayout(self.frame_menu_central)
         layout2.setContentsMargins(20,0,5,0)
-        layout2.addWidget(self.frame4)
-        layout2.addWidget(self.frame5)
-        layout2.addWidget(self.frame3)
+        layout2.addWidget(self.frame_productos)
+        layout2.addWidget(self.frame_detalle_venta)
+        layout2.addWidget(self.frame_barra_de_herramienta_lateral)
         layout2.setSpacing(10)
         
         
@@ -281,10 +366,14 @@ class Application(QMainWindow):
        self.resultado = QMessageBox.question(self, "Cerrar seccion", "¿quieres cerrar seccion?", QMessageBox.Ok | QMessageBox.No | QMessageBox.No)
        if self.resultado == QMessageBox.Ok:
            self.close()
-           self.ventana_login = login()
+           self.ventana_login = lg.login()
            self.ventana_login.setStyleSheet("""QMainWindow{background-image: url(luis3.jpg);}""")
            self.ventana_login.show()
            pass
+     
+    def agregar_producto(self):
+        self.window_producto = Productos()
+        self.window_producto.show()
         
     def Usuarios(self):
         self.confirmacion = PassWord()
@@ -322,6 +411,8 @@ class Application(QMainWindow):
         if event.type() == QEvent.Enter:
             if objeto == self.boton_salir:
                 self.boton_salir.setIconSize(QSize(x,y))
+            elif objeto == self.boton_agregar_producto:
+                self.boton_agregar_producto.setIconSize(QSize(x,y))     
             elif objeto == self.boton_usuarios:
                 self.boton_usuarios.setIconSize(QSize(x,y))
             elif objeto == self.boton_de_Estadisticas:
@@ -333,6 +424,8 @@ class Application(QMainWindow):
         elif event.type() == QEvent.Leave:
             if objeto == self.boton_salir:
                 self.boton_salir.setIconSize(QSize(25,25))
+            elif objeto == self.boton_agregar_producto:
+                self.boton_agregar_producto.setIconSize(QSize(25,25))
             elif objeto == self.boton_usuarios:
                 self.boton_usuarios.setIconSize(QSize(25,25))
             elif objeto == self.boton_de_Estadisticas:
