@@ -5,13 +5,16 @@ Created on Sat Jul 22 12:21:13 2023
 @author: Acer Tuch Screen
 """
 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QFrame, QLabel, QPushButton, QLineEdit, QCheckBox, QWidget
+from PyQt5.QtWidgets import QApplication, QMainWindow, QFrame, QLabel, QPushButton, QLineEdit, QCheckBox, QWidget, QMessageBox
 from PyQt5.QtWidgets import QMessageBox, QFormLayout, QHBoxLayout, QVBoxLayout, QGroupBox, QGraphicsView, QGraphicsScene, QGraphicsPixmapItem
 from PyQt5.QtCore import QSize, QEvent
 from PyQt5.QtGui import QPixmap, QFont, QIcon
 from NuevoRegistro import RegistroUsuario
-import VentanaPrincipal as vp
+import pagina_principal2 as pp2
 from PyQt5.QtCore import Qt
+import sqlalchemy
+import pandas as pd
+import mysql.connector
 import sys
 
 class registrar(RegistroUsuario):
@@ -24,10 +27,7 @@ class login(QMainWindow):
         super(login,self).__init__()
         self.setFixedSize(850,640)
         self.setWindowTitle("User")
-       
-        
-        
-        
+
         frame_padre = QFrame(self)
         frame_padre.resize(425,600)
         frame_padre.move(420,20)
@@ -65,12 +65,17 @@ class login(QMainWindow):
         self.show_Password = QCheckBox("Show", frame_padre)
         self.show_Password.setFont(QFont("Times New Roman",12))
         self.show_Password.move(300,330)
+        self.show_Password.setChecked(False)
+        self.show_Password.stateChanged.connect(self.showpassword)
+        
+        
         
         self.button_login = QPushButton("Login",frame_padre)
         self.button_login.setFont(QFont("Times New Roman",14))
         self.button_login.setStyleSheet("background-color: rgb(255,255,255); border-radius: 5px; border: 2px solid rgb(39, 174, 96 )")
         self.button_login.resize(100,40)
         self.button_login.move(160,400)
+        self.button_login.clicked.connect(self.entrar)
         self.button_login.installEventFilter(self)
         
         self.button_registrar = QPushButton("Sign in",frame_padre)
@@ -80,6 +85,12 @@ class login(QMainWindow):
         self.button_registrar.move(160,460)
         self.button_registrar.installEventFilter(self)
         self.button_registrar.clicked.connect(self.Registrar)
+        
+    def showpassword(self):
+        if self.show_Password.isChecked():
+            self.LinePassWord.setEchoMode(False)
+        else:
+            self.LinePassWord.setEchoMode(QLineEdit.Password)
         
     def Registrar(self):
         self.registro = RegistroUsuario()
@@ -104,6 +115,55 @@ class login(QMainWindow):
             elif source == self.button_registrar:
                 self.button_registrar.setStyleSheet("background-color: rgb(255, 255, 255); border-radius: 5px; border: 2px solid rgb(39, 174, 96 );")
         return False
+    
+    def entrar(self):
+        try:
+            self.bd = mysql.connector.connect(
+                user = "root",
+                password = "josefina2018",
+                host = "localhost",
+                database = "sistema-facturacion"
+                )
+            
+            self.Email = self.LineUsuario.text()
+
+            cursor = self.bd.cursor()
+            cursor.execute("SELECT PassWord FROM usuarios WHERE Email = %s", (self.Email,))
+            datos =cursor.fetchall()
+            
+        except:
+            print("no se pudo conectar a la base de datos")
+            
+        datos_password = self.LinePassWord.text()
+        
+        
+        for password in datos:
+            if password[0] != datos_password:
+                print(datos_password)
+                print(password)
+                print("no coincide")
+            else:
+                print("coincide")
+                
+                self.ventana_principal = pp2.Application()
+                self.ventana_principal.showMaximized()
+                
+                cursor.close()  
+                
+                self.close()
+            
+               
+            
+           
+           # print(df)
+           
+           #cursor.execute("SELECT database();")
+           #registro = cursor.fetchone()
+                     
+      
+
+       
+        
            
 
        
